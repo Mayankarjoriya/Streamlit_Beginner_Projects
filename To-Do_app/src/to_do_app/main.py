@@ -1,25 +1,31 @@
 import streamlit as st
+import pandas as pd
 
 st.title("To-Do App")
 
 memo= st.session_state
 
+# This is gonna save data of To-Do's
+chart_list = [[None,None]]
+dataframe_list = pd.DataFrame(chart_list,columns=('Name Of Task', 'Due Date'))
 
 
 with st.container():
-    to_do_Name=st.text_input("Enter your task name...", key="task_name")
-    due_date = st.datetime_input(
-        "Enter your due date",
-        key="due_date",
-    )
-    name_col, due_col = st.columns(2)
-    name_col.write("Name")
-    due_col.write("Due Date")
-    tasks=[]
-    for task in memo['task_name']:
-        tasks.append(task)
-    if st.button("Send balloons!"):
-        st.balloons()
+
+        task=st.text_input("Enter your task name...")
+        due_date=st.datetime_input(
+            "Enter your due date",
+
+        )
+        if st.button("Add Task"):
+            if chart_list[0] == None:
+                chart_list[0] = [task, due_date]
+            elif chart_list[0] != None:
+                dataframe_list.loc[len(dataframe_list)] = [task, due_date]
+            data_widget = st.dataframe(dataframe_list)
+
+        # if st.button("Send balloons!"):
+        #     st.balloons()
 
 st.write(memo)
 
