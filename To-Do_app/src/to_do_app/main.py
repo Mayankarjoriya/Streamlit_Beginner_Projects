@@ -6,32 +6,52 @@ st.title("To-Do App")
 memo= st.session_state
 
 # This is gonna save data of To-Do's
-chart_list = [[None,None]]
-dataframe_list = pd.DataFrame(chart_list,columns=('Name Of Task', 'Due Date'))
+chart_list = []
+# dataframe_list = pd.DataFrame(chart_list,columns=('Name Of Task', 'Due Date'))
 
 
 with st.container():
 
-        task=st.text_input("Enter your task name...")
+        task=st.text_input("Enter your task name...",value=None)
         due_date=st.datetime_input(
             "Enter your due date",
-
+            value =None
         )
         if st.button("Add Task"):
-            if chart_list[0] == None:
-                chart_list[0] = [task, due_date]
-            elif chart_list[0] != None:
-                dataframe_list.loc[len(dataframe_list)] = [task, due_date]
-            data_widget = st.dataframe(dataframe_list)
+        #         dataframe_list.loc[len(dataframe_list)] = [task, due_date]
+                chart_list.append(task)
+
+        # st.write(chart_list)
+        # data_widget = st.dataframe(dataframe_list)
 
         # if st.button("Send balloons!"):
         #     st.balloons()
 
-st.write(memo)
+# col1,col2,col3 = st.columns(3)
+
+# with col1:
+#     st.header("Task")
+#
+# with col2:
+#     st.header("Due Date")
+#
+# with col3:
+#     # Checkbox
+#     st.header("Task Done")
+# st.write(memo)
 
 
+ # 1. Initialize with explicit string headers instead of numeric keys
+if "tasks_df" not in st.session_state:
+    st.session_state.tasks_df = pd.DataFrame(columns=["Name of Task", "Due Date"])
 
+# 2. When adding data, match those exact headers
+# (Inside your add task button logic):
+new_row = pd.DataFrame([{"Name of Task": task, "Due Date": due_date}])
+st.session_state.tasks_df = pd.concat([st.session_state.tasks_df, new_row], ignore_index=True)
 
+# 3. Render the DataFrame and hide the numeric row index
+st.dataframe(st.session_state.tasks_df, hide_index=True)
 
 
 
